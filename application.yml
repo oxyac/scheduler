@@ -12,3 +12,10 @@ spring:
     username: sa
   h2:
     console.enabled: true
+
+webdriver:
+  chrome:
+    driver: /usr/bin/chromedriver
+
+bot:
+  name: orar_lectii_bot

@@ -1,17 +1,12 @@
 package com.oxyac.horaire.data.entity;
 
 import com.oxyac.horaire.telegram.ScheduleType;
-import com.oxyac.horaire.telegram.State;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 // http://orar.ase.md/documents/orar_ff/2022-2023/REI/iarna/Anul IV_REI_ÎFR.pdf
 @Entity
@@ -20,6 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Schedule extends AbstractBaseEntity {
     @Column(name = "type", nullable = false)
     @NotNull
@@ -29,15 +25,20 @@ public class Schedule extends AbstractBaseEntity {
     @NotBlank
     private String yearRange;
 
-    @Column(name = "filename", nullable = false)
-    @NotNull
-    private Integer filename;
-
-    @Column(name = "basename", nullable = false)
-    @NotNull
-    private Integer baseName;
-
     @Column(name = "faculty", nullable = false)
     @NotBlank
     private String faculty;
+
+    @Column(name = "semester")
+    private String semester;
+    @Column(name = "filename", nullable = false)
+    @NotNull
+    private String filename;
+
+
+    @Column(name = "link", nullable = false)
+    private String link;
+
+    @Column(name="basename")
+    private String baseName;
 }
