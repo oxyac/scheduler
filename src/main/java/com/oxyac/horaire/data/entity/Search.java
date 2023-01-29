@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Search extends AbstractBaseEntity {
-    @Column(name = "chat_id", unique = true, nullable = false)
+    @Column(name = "chat_id", nullable = false)
     @NotNull
     private Long chatId;
 

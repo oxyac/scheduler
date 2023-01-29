@@ -16,9 +16,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static com.oxyac.horaire.telegram.TelegramUtil.createInlineKeyboardButton;
-import static com.oxyac.horaire.telegram.TelegramUtil.createMessageTemplate;
+import static com.oxyac.horaire.data.entity.SearchState.QUERY_FREQUENCY;
+import static com.oxyac.horaire.telegram.TelegramUtil.*;
 
 @Component
 public class StartHandler implements Handler {
@@ -49,28 +51,12 @@ public class StartHandler implements Handler {
         userRepository.save(person);
 
         Search search = new Search();
-        search.setSearchState(SearchState.QUERY_FREQUENCY);
+        search.setSearchState(QUERY_FREQUENCY);
         search.setChatId(person.getChatId());
         searchRepository.save(search);
 
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<ScheduleType> schedules = scheduleRepository.findDistinctType();
-        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        List<InlineKeyboardButton> keyboardButtons = new ArrayList<>();
-        int idx = 0;
-        for (ScheduleType schedule :
-                schedules) {
-            idx++;
-            keyboardButtons.add(createInlineKeyboardButton(schedule.toString(), schedule.toString()));
-            if(idx % 3 == 0){
-                keyboard.add(keyboardButtons);
-                keyboardButtons = new ArrayList<>();
-            }
-        }
-        keyboard.add(keyboardButtons);
-        inlineKeyboardMarkup.setKeyboard(keyboard);
-        registrationMessage.setReplyMarkup(inlineKeyboardMarkup);
-
+        List<String> schedules = scheduleRepository.findDistinctType();
+        registrationMessage.setReplyMarkup(createInlineKeyboard(schedules, QUERY_FREQUENCY));
         return List.of(welcomeMessage, registrationMessage);
     }
 

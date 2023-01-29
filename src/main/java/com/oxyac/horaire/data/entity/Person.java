@@ -20,7 +20,7 @@ public class Person extends AbstractBaseEntity {
     @NotNull
     private Long chatId;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", unique = true)
     @NotBlank
     private String name;
 
@@ -32,7 +32,7 @@ public class Person extends AbstractBaseEntity {
     @Column(name = "last_name")
 
     private String lastName;
-    @Column(name = "username", nullable = false)
+    @Column(name = "username")
 
     private String username;
 

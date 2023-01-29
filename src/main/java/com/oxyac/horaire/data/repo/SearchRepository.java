@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface SearchRepository extends CrudRepository<Search, Integer> {
 
+    Search findTopByChatId(Long chatId);
 }
