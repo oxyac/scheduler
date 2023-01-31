@@ -36,6 +36,7 @@ public class TelegramUtil {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> keyboardButtons = new ArrayList<>();
+        data.sort(String::compareTo);
         int idx = 0;
         for (String s : data) {
             idx++;

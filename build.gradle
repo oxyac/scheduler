@@ -1,8 +1,10 @@
 plugins {
     id 'java'
+    id 'application'
     id 'org.springframework.boot' version '3.0.2'
     id 'io.spring.dependency-management' version '1.1.0'
 }
+mainClassName = 'com.oxyac.horaire.HoraireApplication'
 
 group = 'com.oxyac'
 version = '0.0.1-SNAPSHOT'
@@ -17,13 +19,13 @@ configurations {
 repositories {
     mavenCentral()
 }
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.4'
-    implementation 'org.telegram:telegrambots-spring-boot-starter:6.1.0'
+    implementation 'mysql:mysql-connector-java:8.0.32'
+    implementation 'org.telegram:telegrambots-spring-boot-starter:6.4.0'
     implementation 'org.jetbrains:annotations:23.1.0'
     implementation 'org.jsoup:jsoup:1.14.3'
     compileOnly 'org.projectlombok:lombok'

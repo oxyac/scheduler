@@ -28,6 +28,8 @@ public class SearchHandler implements Handler {
     private final ScheduleRepository scheduleRepository;
     private final StartHandler startHandler;
 
+    private Search search;
+
     private Person person;
     private String message;
 
@@ -42,27 +44,27 @@ public class SearchHandler implements Handler {
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
         log.info(message);
-        Search search = searchRepository.findTopByChatId(person.getChatId());
+        search = searchRepository.findFirstByChatIdOrderByIdDesc(person.getChatId());
         this.message = message;
         this.person = person;
         if (message.startsWith(QUERY_FREQUENCY.toString())) {
-            SendMessage sendMessage = saveTypeQueryYears(search);
+            SendMessage sendMessage = saveTypeQueryYears();
             return List.of(sendMessage);
         } else if (message.startsWith(QUERY_YEAR.toString())) {
-            SendMessage sendMessage = saveYearsQuerySemester(search);
+            SendMessage sendMessage = saveYearsQuerySemester();
             return List.of(sendMessage);
         } else if (message.startsWith(QUERY_SEMESTER.toString())) {
-            SendMessage sendMessage = saveSemesterQueryFaculty(search);
+            SendMessage sendMessage = saveSemesterQueryFaculty();
             return List.of(sendMessage);
         } else if (message.startsWith(QUERY_FACULTY.toString())) {
-            return saveFacultyReturnSchedule(search);
+            return saveFacultyReturnSchedule();
         }
         person.setBotState(State.START);
         personRepository.save(person);
         return startHandler.handle(person, message);
     }
 
-    private List<PartialBotApiMethod<? extends Serializable>> saveFacultyReturnSchedule(Search search) {
+    private List<PartialBotApiMethod<? extends Serializable>> saveFacultyReturnSchedule() {
         search.setFaculty(message.split("\\|")[1]);
         search.setSearchState(DOWNLOAD_FILE);
         searchRepository.save(search);
@@ -93,39 +95,35 @@ public class SearchHandler implements Handler {
         return List.of(sendMessage);
     }
 
-    private SendMessage saveSemesterQueryFaculty(Search search) {
+    private SendMessage saveSemesterQueryFaculty() {
         search.setSemester(message.split("\\|")[1]);
-        search.setSearchState(QUERY_FACULTY);
-        searchRepository.save(search);
-
-        SendMessage sendMessage = createMessageTemplate(person);
-        sendMessage.setText("Please select faculty:");
         List<String> scheduleList = scheduleRepository.findDistinctFacultyByFilter(search.getType(), search.getYearRange(), search.getSemester());
-        sendMessage.setReplyMarkup(createInlineKeyboard(scheduleList, QUERY_FACULTY));
-        return sendMessage;
+        return prepareKeyboard(scheduleList, QUERY_FACULTY, "Please select faculty:");
     }
 
-    private SendMessage saveYearsQuerySemester(Search search) {
+    private SendMessage saveYearsQuerySemester() {
         search.setYearRange(message.split("\\|")[1]);
-        search.setSearchState(QUERY_SEMESTER);
-        searchRepository.save(search);
-
-        SendMessage sendMessage = createMessageTemplate(person);
-        sendMessage.setText("Please select semester:");
         List<String> scheduleList = scheduleRepository.findDistinctSemesterByFilter(search.getType(), search.getYearRange());
-        sendMessage.setReplyMarkup(createInlineKeyboard(scheduleList, QUERY_SEMESTER));
-        return sendMessage;
+        return prepareKeyboard(scheduleList, QUERY_SEMESTER, "Please select semester:");
     }
 
-    private SendMessage saveTypeQueryYears(Search search) {
+    private SendMessage saveTypeQueryYears() {
         search.setType(ScheduleType.valueOf(message.split("\\|")[1]));
-        search.setSearchState(QUERY_YEAR);
         searchRepository.save(search);
-
-        SendMessage sendMessage = createMessageTemplate(person);
-        sendMessage.setText("Please select year of studies");
         List<String> scheduleList = scheduleRepository.findDistinctYearRangeByType(search.getType());
-        sendMessage.setReplyMarkup(createInlineKeyboard(scheduleList, QUERY_YEAR));
+        return prepareKeyboard(scheduleList, QUERY_YEAR, "Please select year of studies:");
+    }
+    private SendMessage prepareKeyboard(List<String> scheduleList, SearchState searchState, String text) {
+        search.setSearchState(searchState);
+        searchRepository.save(search);
+        SendMessage sendMessage = createMessageTemplate(person);
+        log.info(scheduleList.toString());
+        if(scheduleList.size() == 0){
+            sendMessage.setText("No results found. Try again with /start");
+            return sendMessage;
+        }
+        sendMessage.setText(text);
+        sendMessage.setReplyMarkup(createInlineKeyboard(scheduleList, searchState));
         return sendMessage;
     }
 

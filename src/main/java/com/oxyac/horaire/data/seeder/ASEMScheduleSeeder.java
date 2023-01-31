@@ -10,8 +10,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.servlet.server.Encoding;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -19,10 +24,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 @Component
 @Slf4j
+@EnableAsync
 public class ASEMScheduleSeeder {
 
     @Autowired
@@ -30,14 +37,14 @@ public class ASEMScheduleSeeder {
     public ASEMScheduleSeeder() {
     }
 
-    @Bean
-    public CommandLineRunner seedDB() {
-        return (args) -> {
+    @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.MINUTES)
+    @Async
+    public void seedDB() {
             log.info("SEEDING");
+            this.repository.deleteAll();
             fillByLink("http://orar.ase.md/frecventa_redusa");
             fillByLink("http://orar.ase.md/orar_zi");
             log.info("SEEDING DONE");
-        };
     }
 
     private void fillByLink(String sourceURI) {

@@ -14,9 +14,8 @@ public abstract class AbstractBaseEntity {
 
     // Аннотации, описывающие механизм генерации id - разберитесь в документации каждой!
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
-    @SequenceGenerator(name = "global_seq", sequenceName = "global_seq", allocationSize = 1)
-    protected Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
     protected AbstractBaseEntity() {
     }
