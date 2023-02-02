@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.oxyac.horaire.data.entity.SearchState.QUERY_FREQUENCY;
@@ -36,6 +37,7 @@ public class TelegramUtil {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> keyboardButtons = new ArrayList<>();
+        data.removeAll(Collections.singleton(null));
         data.sort(String::compareTo);
         int idx = 0;
         for (String s : data) {
