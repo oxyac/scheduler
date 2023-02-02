@@ -4,20 +4,14 @@ import com.oxyac.horaire.data.entity.*;
 import com.oxyac.horaire.data.repo.PersonRepository;
 import com.oxyac.horaire.data.repo.ScheduleRepository;
 import com.oxyac.horaire.data.repo.SearchRepository;
-import com.oxyac.horaire.telegram.ScheduleType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.oxyac.horaire.data.entity.SearchState.QUERY_FREQUENCY;
 import static com.oxyac.horaire.telegram.TelegramUtil.*;
@@ -50,9 +44,12 @@ public class StartHandler implements Handler {
         person.setBotState(State.SEARCH_SCHEDULE);
         userRepository.save(person);
 
-        Search search = new Search();
+        Search search = searchRepository.findTopByChatId(person.getChatId()).orElse(new Search(person.getChatId()));
+        search.setSemester(null);
+        search.setFaculty(null);
+        search.setYearRange(null);
+        search.setType(null);
         search.setSearchState(QUERY_FREQUENCY);
-        search.setChatId(person.getChatId());
         searchRepository.save(search);
 
         List<String> schedules = scheduleRepository.findDistinctType();

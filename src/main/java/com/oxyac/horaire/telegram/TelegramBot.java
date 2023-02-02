@@ -4,6 +4,8 @@ import com.oxyac.horaire.config.AppProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -40,12 +42,24 @@ public class TelegramBot extends TelegramLongPollingBot implements LongPollingBo
     }
 
     public void onUpdateReceived(Update update) {
+        if(update.hasCallbackQuery()) {
+            AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
+            answerCallbackQuery.setCallbackQueryId(update.getCallbackQuery().getId());
+            try {
+                execute(answerCallbackQuery);
+            } catch (TelegramApiException e) {
+                log.error(e.getMessage());
+            }
+        }
+
         List<PartialBotApiMethod<? extends Serializable>> messagesToSend = updateReceiver.handle(update);
 
         if (messagesToSend != null && !messagesToSend.isEmpty()) {
             messagesToSend.forEach(response -> {
                 if (response instanceof SendMessage) {
                     executeWithExceptionCheck((SendMessage) response);
+                } else if (response instanceof AnswerInlineQuery) {
+                    sendApiMethod((AnswerInlineQuery) response);
                 }
             });
         }
@@ -56,6 +70,14 @@ public class TelegramBot extends TelegramLongPollingBot implements LongPollingBo
             execute(sendMessage);
         } catch (TelegramApiException e) {
             log.error("oops");
+        }
+    }
+
+    public void sendApiMethod(AnswerInlineQuery sendMessage) {
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            log.error(e.getMessage());
         }
     }
 

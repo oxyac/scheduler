@@ -13,4 +13,5 @@ public interface SearchRepository extends CrudRepository<Search, Integer> {
 
     Search findFirstByChatIdOrderByIdDesc(Long chatId);
 
+    Optional<Search> findTopByChatId(Long chatId);
 }

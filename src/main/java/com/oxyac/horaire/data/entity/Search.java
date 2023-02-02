@@ -44,4 +44,8 @@ public class Search extends AbstractBaseEntity {
     @Column(name= "search_datetime")
     @CreationTimestamp
     private LocalDateTime searchDateTime;
+
+    public Search(Long chatId) {
+        this.chatId = chatId;
+    }
 }

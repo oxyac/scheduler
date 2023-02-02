@@ -3,6 +3,7 @@ import com.oxyac.horaire.data.entity.Person;
 import com.oxyac.horaire.data.repo.PersonRepository;
 import com.oxyac.horaire.telegram.handler.Handler;
 import com.oxyac.horaire.data.entity.State;
+import com.oxyac.horaire.telegram.handler.InlineHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
@@ -10,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.InlineQuery;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -23,9 +25,12 @@ public class UpdateReceiver {
     // Имеем доступ в базу пользователей
     private final PersonRepository personRepository;
 
-    public UpdateReceiver(List<Handler> handlers, PersonRepository userRepository) {
+    private InlineHandler inlineHandler;
+
+    public UpdateReceiver(List<Handler> handlers, PersonRepository userRepository, InlineHandler inlineHandler) {
         this.handlers = handlers;
         this.personRepository = userRepository;
+        this.inlineHandler = inlineHandler;
     }
 
     // Обрабатываем полученный Update
@@ -40,18 +45,25 @@ public class UpdateReceiver {
                 return getHandlerByState(user.getBotState()).handle(user, message.getText());
 
             } else if (update.hasCallbackQuery()) {
-
                 final CallbackQuery callbackQuery = update.getCallbackQuery();
                 final Long chatId = callbackQuery.getFrom().getId();
                 final Person user = personRepository.getByChatId(chatId)
                         .orElseGet(() -> personRepository.save(new Person(chatId)));
 
                 return getHandlerByCallBackQuery(callbackQuery.getData()).handle(user, callbackQuery.getData());
+            } else if (update.hasInlineQuery()) {
+                final InlineQuery inlineQuery = update.getInlineQuery();
+                final Long chatId = inlineQuery.getFrom().getId();
+                final Person user = personRepository.getByChatId(chatId)
+                        .orElseGet(() -> personRepository.save(new Person(chatId)));
+
+                return inlineHandler.handle(user, inlineQuery);
             }
 
             throw new UnsupportedOperationException();
         } catch (UnsupportedOperationException e) {
             log.error("No action found");
+            log.info(update.toString());
             return Collections.emptyList();
         }
     }
