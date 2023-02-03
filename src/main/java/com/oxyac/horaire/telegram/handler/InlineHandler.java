@@ -14,7 +14,6 @@ import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQuery
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.oxyac.horaire.telegram.ScheduleType.orar_ff;
 import static com.oxyac.horaire.telegram.ScheduleType.orar_zi;
@@ -31,11 +30,11 @@ public class InlineHandler {
 
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person user, InlineQuery data) {
         List<Schedule> scheduleList;
-        if(data.getQuery().trim().isEmpty()){
+        if (data.getQuery().trim().isEmpty()) {
             scheduleList = scheduleRepository.getListForInlineQuery("2022-2023", List.of("semestrul 2", "iarna"));
-        } else if(data.getQuery().toUpperCase().trim().contains("R")){
+        } else if (data.getQuery().toUpperCase().trim().contains("R")) {
             scheduleList = scheduleRepository.getListForInlineQueryType("2022-2023", List.of("semestrul 2", "iarna"), orar_ff);
-        } else{
+        } else {
             scheduleList = scheduleRepository.getListForInlineQueryType("2022-2023", List.of("semestrul 2", "iarna"), orar_zi);
 
         }

@@ -1,8 +1,9 @@
 package com.oxyac.horaire.telegram;
+
 import com.oxyac.horaire.data.entity.Person;
+import com.oxyac.horaire.data.entity.State;
 import com.oxyac.horaire.data.repo.PersonRepository;
 import com.oxyac.horaire.telegram.handler.Handler;
-import com.oxyac.horaire.data.entity.State;
 import com.oxyac.horaire.telegram.handler.InlineHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,12 +21,9 @@ import java.util.List;
 @Component
 @Slf4j
 public class UpdateReceiver {
-    // Храним доступные хендлеры в списке (подсмотрел у Miroha)
     private final List<Handler> handlers;
-    // Имеем доступ в базу пользователей
     private final PersonRepository personRepository;
-
-    private InlineHandler inlineHandler;
+    private final InlineHandler inlineHandler;
 
     public UpdateReceiver(List<Handler> handlers, PersonRepository userRepository, InlineHandler inlineHandler) {
         this.handlers = handlers;
@@ -33,7 +31,6 @@ public class UpdateReceiver {
         this.inlineHandler = inlineHandler;
     }
 
-    // Обрабатываем полученный Update
     public List<PartialBotApiMethod<? extends Serializable>> handle(Update update) {
         try {
             if (isMessageWithText(update)) {
