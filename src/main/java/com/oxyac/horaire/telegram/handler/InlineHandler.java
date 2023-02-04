@@ -39,7 +39,6 @@ public class InlineHandler {
 
         }
         List<InlineQueryResult> results = new ArrayList<>();
-        log.info(String.valueOf(scheduleList.size()));
 
         for (int i = 0; i < 50 && i < scheduleList.size(); i++) {
             InlineQueryResultDocument result = new InlineQueryResultDocument();
@@ -47,7 +46,6 @@ public class InlineHandler {
             result.setTitle(scheduleList.get(i).getFaculty() + " - " + scheduleList.get(i).getBaseName());
             result.setId(scheduleList.get(i).getId().toString());
             result.setMimeType("application/pdf");
-            log.info(result.toString());
 
             results.add(result);
         }

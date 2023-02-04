@@ -77,7 +77,6 @@ public class UpdateReceiver {
         log.info(query);
         return handlers.stream()
                 .filter(h -> {
-                    log.info(h.operatedCallBackQuery().toString());
                     return h.operatedCallBackQuery().stream()
                             .anyMatch(query::startsWith);
                 })

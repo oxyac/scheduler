@@ -69,7 +69,7 @@ public class TelegramBot extends TelegramLongPollingBot implements LongPollingBo
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            log.error("oops");
+            log.error(e.getMessage());
         }
     }
 
