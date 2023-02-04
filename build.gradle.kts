@@ -33,11 +33,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-tasks.getByName<BootBuildImage>("bootBuildImage") {
-    imageName.set("oxyac/asem-scheduler:${version}")
-    environment.set(mapOf(
-            "JAVA_TOOL_OPTIONS" to "--add-opens=java.base/java.time=ALL-UNNAMED",
-            "BP_JVM_VERSION" to "17.*"
-    ))
-
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+    archiveVersion.set("app.jar")
 }
