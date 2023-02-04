@@ -34,5 +34,6 @@ dependencies {
 }
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
-    archiveVersion.set("app.jar")
+    archiveBaseName.set("app")
+    archiveVersion.set("")
 }
