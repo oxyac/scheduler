@@ -113,12 +113,13 @@ public class SearchHandler implements Handler {
         List<String> scheduleList = scheduleRepository.findDistinctYearRangeByType(search.getType());
         return prepareKeyboard(scheduleList, QUERY_YEAR, "Please select year of studies:");
     }
+
     private SendMessage prepareKeyboard(List<String> scheduleList, SearchState searchState, String text) {
         search.setSearchState(searchState);
         searchRepository.save(search);
         SendMessage sendMessage = createMessageTemplate(person);
         log.info(scheduleList.toString());
-        if(scheduleList.size() == 0){
+        if (scheduleList.size() == 0) {
             sendMessage.setText("No results found. Try again with /start");
             return sendMessage;
         }

@@ -42,7 +42,7 @@ public class TelegramBot extends TelegramLongPollingBot implements LongPollingBo
     }
 
     public void onUpdateReceived(Update update) {
-        if(update.hasCallbackQuery()) {
+        if (update.hasCallbackQuery()) {
             AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
             answerCallbackQuery.setCallbackQueryId(update.getCallbackQuery().getId());
             try {

@@ -1,6 +1,8 @@
 package com.oxyac.horaire.telegram.handler;
 
-import com.oxyac.horaire.data.entity.*;
+import com.oxyac.horaire.data.entity.Person;
+import com.oxyac.horaire.data.entity.Search;
+import com.oxyac.horaire.data.entity.State;
 import com.oxyac.horaire.data.repo.PersonRepository;
 import com.oxyac.horaire.data.repo.ScheduleRepository;
 import com.oxyac.horaire.data.repo.SearchRepository;
@@ -14,16 +16,16 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.oxyac.horaire.data.entity.SearchState.QUERY_FREQUENCY;
-import static com.oxyac.horaire.telegram.TelegramUtil.*;
+import static com.oxyac.horaire.telegram.TelegramUtil.createInlineKeyboard;
+import static com.oxyac.horaire.telegram.TelegramUtil.createMessageTemplate;
 
 @Component
 public class StartHandler implements Handler {
-    @Value("${bot.name}")
-    private String botUsername;
-
     private final PersonRepository userRepository;
     private final ScheduleRepository scheduleRepository;
     private final SearchRepository searchRepository;
+    @Value("${bot.name}")
+    private String botUsername;
 
     public StartHandler(PersonRepository userRepository,
                         ScheduleRepository scheduleRepository,

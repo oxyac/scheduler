@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.oxyac.horaire.data.entity.SearchState.QUERY_FREQUENCY;
-
 public class TelegramUtil {
     public static SendMessage createMessageTemplate(Person user) {
         return createMessageTemplate(String.valueOf(user.getChatId()));

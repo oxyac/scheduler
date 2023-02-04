@@ -1,10 +1,9 @@
 package com.oxyac.horaire.data.repo;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.oxyac.horaire.data.entity.Person;
 import org.springframework.data.repository.CrudRepository;
+
+import java.util.Optional;
 
 public interface PersonRepository extends CrudRepository<Person, Long> {
 

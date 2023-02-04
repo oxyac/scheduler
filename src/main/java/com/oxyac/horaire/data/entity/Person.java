@@ -1,6 +1,9 @@
 package com.oxyac.horaire.data.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,24 +22,18 @@ public class Person extends AbstractBaseEntity {
     @Column(name = "chat_id", unique = true, nullable = false)
     @NotNull
     private Long chatId;
-
     @Column(name = "name", unique = true)
     @NotBlank
     private String name;
-
     @Column(name = "bot_state", nullable = false)
     private State botState;
     @Column(name = "first_name")
-
     private String firstName;
     @Column(name = "last_name")
-
     private String lastName;
     @Column(name = "username")
-
     private String username;
 
-    // Конструктор нужен для создания нового пользователя (а может и нет? :))
     public Person(Long chatId) {
         this.chatId = chatId;
         this.name = String.valueOf(chatId);

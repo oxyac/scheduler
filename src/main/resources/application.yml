@@ -1,38 +1,21 @@
+server:
+  port: ${PORT:8080}
+
 logging:
   level:
-    com.oxyac: DEBUG
+    com.oxyac: ${LOG_LEVEL:INFO}
 
 spring:
   jpa:
-    show-sql: true
+    show-sql: false
     database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
   datasource:
-    url: jdbc:h2:mem:crm
+    url: jdbc:h2:${H2_DB_PATH:./horaire}
     driverClassName: org.h2.Driver
     username: sa
-  h2:
-    console:
-      enabled: true
-
-webdriver:
-  firefox:
-    driver: /usr/bin/geckodriver
 
 bot:
-  name: orar_lectii_bot
-  token: 6194121912:AAEN1-0VES-J5AeykyBfWhQbkH-JOSrARcU
-
-#bot:
-#  name: ${BOT_NAME}
-#  token: ${BOT_TOKEN}
-
-
-#  jpa:
-#    database-platform: com.oxyac.horaire.config.SQLiteDialect
-#    database: default
-#  datasource:
-#    url: jdbc:sqlite:src/main/resources/horaire.db
-
-
-#      url: jdbc:h2:file:/home/oleg/Projects/horaire/src/main/resources/schedule;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
-#      url: jdbc:h2:tcp://localhost/~/test;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+  name:  ${BOT_NAME}
+  token: ${BOT_TOKEN}
