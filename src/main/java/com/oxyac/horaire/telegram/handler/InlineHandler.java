@@ -43,7 +43,7 @@ public class InlineHandler {
         for (int i = 0; i < 50 && i < scheduleList.size(); i++) {
             InlineQueryResultDocument result = new InlineQueryResultDocument();
             result.setDocumentUrl(scheduleList.get(i).getLink().replaceAll(" ", "%20"));
-            result.setTitle(scheduleList.get(i).getFaculty() + " - " + scheduleList.get(i).getBaseName());
+            result.setTitle(scheduleList.get(i).getYearRange() + " - " + scheduleList.get(i).getFaculty() + " - " + scheduleList.get(i).getBaseName());
             result.setId(scheduleList.get(i).getId().toString());
             result.setMimeType("application/pdf");
 
