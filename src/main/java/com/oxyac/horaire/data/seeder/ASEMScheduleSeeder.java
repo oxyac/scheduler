@@ -51,7 +51,7 @@ public class ASEMScheduleSeeder {
 
     }
 
-    @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedDelay = 24, timeUnit = TimeUnit.HOURS)
     @Async
     public void seedDB() {
         log.info("SEEDING");
